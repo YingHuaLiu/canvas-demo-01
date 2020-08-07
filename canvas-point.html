@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        #canvas {
+            display: block;
+        }
+    </style>
+
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    var ctx = canvas.getContext("2d");
+
+    let painting = false;
+
+    var isTouchDevice = 'ontouchstart' in document.documentElement;
+
+    if (isTouchDevice) {
+        canvas.ontouchmove = (e) => {
+            var x = e.touches[0].clientX;
+            var y = e.touches[0].clientY;
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+        };
+    } else {
+        canvas.onmousedown = () => {
+            painting = true;
+        };
+        canvas.onmousemove = (e) => {
+            if (painting === true) {
+                ctx.beginPath();
+                ctx.arc(e.clientX, e.clientY, 3, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fill();
+            }
+        }
+        canvas.onmouseup = () => {
+            painting = false;
+        }
+    }
+
+</script>
+</body>
+</html>

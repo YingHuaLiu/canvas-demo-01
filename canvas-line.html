@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        #canvas {
+            display: block;
+        }
+    </style>
+
+</head>
+<body>
+<canvas id="canvas">
+
+</canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    var context = canvas.getContext("2d");
+    context.lineWidth = 8;
+    // 使线变得圆滑
+    context.lineCap = 'round';
+
+    let painting = false;
+    let point;
+
+    function paintLine(a, b, c, d) {
+        context.beginPath();
+        context.moveTo(a, b);
+        context.lineTo(c, d);
+        context.stroke();
+    }
+    var isTouchDevice = 'ontouchstart' in document.documentElement;
+    if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+            point = [e.touches[0].clientX, e.touches[0].clientY];
+        };
+        canvas.ontouchmove = (e) => {
+            paintLine(point[0], point[1], e.touches[0].clientX, e.touches[0].clientY);
+            point[0] = e.touches[0].clientX;
+            point[1] = e.touches[0].clientY;
+        };
+    } else {
+        canvas.onmousedown = (e) => {
+            painting = true;
+            point = [e.clientX, e.clientY];
+        }
+        canvas.onmousemove = (e) => {
+            if (painting === true) {
+                paintLine(point[0], point[1], e.clientX, e.clientY);
+                point[0] = e.clientX;
+                point[1] = e.clientY;
+            }
+        }
+        canvas.onmouseup = () => {
+            painting = false;
+        }
+    }
+</script>
+</body>
+</html>
